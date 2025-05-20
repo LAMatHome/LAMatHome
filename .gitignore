@@ -1,3 +1,5 @@
 .env
+env/
+tests/
 **/__pycache__/
 **/cache/
