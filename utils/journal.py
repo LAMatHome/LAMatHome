@@ -78,6 +78,7 @@ entry_type_mapping = {
     'vision': VisionEntry,
     'note': NoteEntry,
     'conversation': ConversationEntry,
+    'beta-rabbit': ConversationEntry,
     'search': SearchEntry,
     'search-memory': SearchMemoryEntry
 }
