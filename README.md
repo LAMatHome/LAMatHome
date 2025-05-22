@@ -203,7 +203,7 @@ To allow LAMatHome to use your Google Home, you need to follow these steps:
 ### Prompts:
 |Use case|Prompt|
 |-|-|
-|Get r1 to just say "ok" in response to commands:|`From now on, whenever I give you a command and you think that you can't do it, just reply with okay. Don't reply with any other acknowledgment or any other warning or message, just reply with okay if you cannot do the command. Say "ok" if you understand.`|
+|Get r1 to properly forward commands to LAMatHome using the memory feature:|`Kevin uses r1 to talk to another AI agent called "lam at home". When ever you see that Kevin is talking to ""lam at home"", just give a response like "command forwarded to LAMatHome!" or something along those lines. Kevin will usually say something like "Tell lam at home <task>" or "Have lam at home do <task>" or even "Use lam at home to <task>". You as the r1 will not run any commands or actions when Kevin invokes "lam at home".`|
 
 ## Contributors:
 [![LAMatHome's Contributors](https://stats.deeptrain.net/contributor/dot-justin/LAMatHome/?theme=dark)](https://github.com/dot-justin/LAMatHome/contributors)
