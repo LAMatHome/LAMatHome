@@ -6,7 +6,7 @@
 	"state_file": "state.json",
 	"host": "hole.rabbit.tech",
 		"host_comment": "This is the host for the rabbit hole api.",
-	"groq_model": "llama3-70b-8192",
+	"groq_model": "llama-3.3-70b-versatile",
 		"groq_model_comment": "This is the model that will be used for the groq api.",
 	"debug": false,
 
