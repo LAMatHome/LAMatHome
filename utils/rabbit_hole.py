@@ -9,8 +9,12 @@ from .get_env import RH_ACCESS_TOKEN
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# rabbit hole base endpoint
+BASE_URL = f"https://{config['host']}/apis"
+
 # headers for the requests made to rabbit hole
 headers = {
+    "host": config["host"],
     "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
     "sec-ch-ua-platform": "Windows",
     "sec-ch-ua-mobile": "?0",
@@ -21,10 +25,6 @@ headers = {
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Dest": "empty",
 }
-
-# rabbit hole base endpoint
-BASE_URL = "https://hole.rabbit.tech/apis"
-
 
 error_count = 0  # sequential error count
 def handle_request_errors(func):  

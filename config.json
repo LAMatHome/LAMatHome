@@ -4,6 +4,10 @@
 	"env_file": ".env",
 	"cache_dir": "cache",
 	"state_file": "state.json",
+	"host": "hole.rabbit.tech",
+		"host_comment": "This is the host for the rabbit hole api.",
+	"groq_model": "llama3-70b-8192",
+		"groq_model_comment": "This is the model that will be used for the groq api.",
 	"debug": false,
 
 	"rabbithole_api_max_retry": 3,

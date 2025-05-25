@@ -179,7 +179,7 @@ def LLMParse(user_prompt, transcript=None, temperature=0.1, top_p=1):
     try:
         chat_completion = client.chat.completions.create(
             messages=messages,
-            model="llama3-70b-8192",
+            model=config.config["groq_model"],
         )
 
         # Log the full response for debugging
