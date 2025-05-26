@@ -2,7 +2,6 @@ import time
 import logging
 from utils.get_env import DC_EMAIL, DC_PASS
 
-
 dc_logged_in = False
 
 def login_discord(page):
@@ -26,25 +25,29 @@ def DiscordText(page, recipient, message):
     global dc_logged_in
     if not dc_logged_in:
         login_discord(page)
+    
     page.goto("https://discord.com/channels/@me")
     page.wait_for_load_state('load')
 
     # Ensure the page is focused
     page.bring_to_front()
-    # Wait for the quick switcher to be visible and then click on it
-    search_Butt = page.wait_for_selector('button[class^="searchBarComponent__"]')
-    search_Butt.click()
-    quick_switcher = page.wait_for_selector('input[aria-label="Quick switcher"]')
+    
+    # Wait for the quick switcher to be visible and then open it
+    time.sleep(3)  # Slight delay to ensure page is fully loaded
+    page.keyboard.press('Control+K')
+    quick_switcher = page.wait_for_selector('input[aria-label="Quick switcher"]', timeout=10000)
+    logging.info(f"searching for recipient {recipient}")
     quick_switcher.fill(recipient)
-    time.sleep(5)
+    time.sleep(3)  # Give time for recipient to load in quick switcher
     quick_switcher.press("Enter")
-    time.sleep(5)  # Give time for recipient to load
+    time.sleep(3)  # Give time for recipient's chat to load
 
     # Wait for the message box to be ready
-    page.fill('div[role="textbox"]', message)
-    page.keyboard.press("Enter")
+    message_box = page.wait_for_selector('div[role="textbox"]', timeout=10000)
+    message_box.fill(message)
+    message_box.press("Enter")
     logging.info(f"Message '{message}' sent to '{recipient}' on Discord!")
-    time.sleep(5)
+    time.sleep(6)  # Ensure message is sent before closing the page
     page.close()
     
     return True

@@ -10,8 +10,12 @@ def FacebookText(page, recipient, message):
     """
 
     global logged_in
-    page.goto("https://www.messenger.com/")
-    page.wait_for_load_state("load")
+    
+    if logged_in == True:
+        page.goto("https://www.messenger.com/t")
+    else:    
+        page.goto("https://www.messenger.com/t")
+        page.wait_for_load_state("load")
 
     # Login if not already logged in
     if "messenger" in page.url and logged_in == False:
@@ -56,4 +60,6 @@ def FacebookText(page, recipient, message):
     # Send the message
     message_box.fill(message)
     page.keyboard.press('Enter')
+    page.wait_for_timeout(5000)
+    page.close()
     return True

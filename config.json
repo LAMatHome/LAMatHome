@@ -58,7 +58,6 @@
 			"openinterpreter_verbose_mode_isenabled_comment": "Valid entries: 'true', 'false'. Must be a string for parsing in openinterpreter.py",
 		"openinterpreter_llm_api_base": "groq",
 			"openinterpreter_llm_api_base_comment": "Valid entries: 'groq', 'openai', your own api base url",
-		"openinterpreter_llm_api_key": "API_KEY_HERE",
 		"openinterpreter_llm_model": "llama3-70b-8192",
 		"openinterpreter_llm_temperature": 0.1,
 

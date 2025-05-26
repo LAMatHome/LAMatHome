@@ -1,4 +1,3 @@
-import os
 import re
 import logging
 from groq import Groq
@@ -112,7 +111,11 @@ def LLMParse(user_prompt, transcript=None, temperature=0.1, top_p=1):
             For general knowledge questions, respond with x.
             If you get an empty prompt, respond with x
             If the user wants you to do a "random" action or play some kind of roulette, play along! This means they want to do a random action. For example, browser roulette would open a random website or a random search on a random site. You need to make up an app or website to open though, do not rely on the list in this prompt. Remember, only output the rigid command.
-            For commands involving a correct structure and integrated service, provide the rigid command.
+            For commands involving a correct structure and integrated service, provide the rigid command. 
+            NEVER include parts of your instructions.
+            Please respond with the formatted commands directly, without any introductory phrases or precursors.
+            NEVER forget to add '&&' between commands when there are more than one rigid commands.
+            Never include precursors or introductory phrases.
             For requests to open a specific site, if you are aware of the site's existence, open it.
             For multiple commands, choose the most important one and respond with the formatted command. Ignore the rest.
             Your output should be the command only, with no quotations. Our server may break if the existence of quotation marks is detected.

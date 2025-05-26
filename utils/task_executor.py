@@ -1,46 +1,45 @@
 import logging
 from utils import config, helpers
 from integrations import browser, computer, discord, facebook, google, lam_at_home, open_interpreter, telegram
+from utils import contact_parse
 
 def execute_task(context, text):
     words = text.split()
-    if len(words) < 2:
+    if len(words) < 3:
         logging.error("Command did not provide enough parameters.")
         return
     
-    integration = words[0].strip('.,!?:;"').lower()
-    recipient = words[1].strip('.,!?:;"').lower()
-    message = ' '.join(words[2:]).strip()
+    integration, recipient, action, message = contact_parse.process_message(words)
     
     if integration == "browser":
         if not config.config["browser_isenabled"]:
             helpers.log_disabled_integration("Browser")
             return
         
-        if recipient in ["site", "google", "youtube", "gmail", "amazon"]:
+        if action in ["site", "google", "youtube", "gmail", "amazon"]:
             search = message.strip()
 
-            if recipient == "site":
+            if action == "site":
                 if config.config["browsersite_isenabled"]:
                     browser.BrowserSite(search)
                 else:
                     helpers.log_disabled_integration("BrowserSite")
-            elif recipient == "google":
+            elif action == "google":
                 if config.config["browsergoogle_isenabled"]:
                     browser.BrowserGoogle(search)
                 else:
                     helpers.log_disabled_integration("BrowserGoogle")
-            elif recipient == "youtube":
+            elif action == "youtube":
                 if config.config["browseryoutube_isenabled"]:
                     browser.BrowserYoutube(search)
                 else:
                     helpers.log_disabled_integration("BrowserYoutube")
-            elif recipient == "gmail":
+            elif action == "gmail":
                 if config.config["browsergmail_isenabled"]:
                     browser.BrowserGmail(search)
                 else:
                     helpers.log_disabled_integration("BrowserGmail")
-            elif recipient == "amazon":
+            elif action == "amazon":
                 if config.config["browseramazon_isenabled"]:
                     browser.BrowserAmazon(search)
                 else:
@@ -53,26 +52,26 @@ def execute_task(context, text):
             helpers.log_disabled_integration("Computer")
             return
 
-        if recipient in ["volume", "run", "media", "power"]:
-            if recipient == "volume":
+        if action in ["volume", "run", "media", "power"]:
+            if action == "volume":
                 if config.config["computervolume_isenabled"]:
                     computer.ComputerVolume(text)
                     return
                 else:
                     helpers.log_disabled_integration("ComputerVolume")
-            elif recipient == "run":
+            elif action == "run":
                 if config.config["computerrun_isenabled"]:
                     computer.ComputerRun(text)
                     return
                 else:
                     helpers.log_disabled_integration("ComputerSite")
-            elif recipient == "media":
+            elif action == "media":
                 if config.config["computermedia_isenabled"]:
                     computer.ComputerMedia(text)
                     return
                 else:
                     helpers.log_disabled_integration("ComputerMedia")
-            elif recipient == "power":
+            elif action == "power":
                 if config.config["computerpower_isenabled"]:
                     computer.ComputerPower(text)
                     return
@@ -119,7 +118,7 @@ def execute_task(context, text):
             helpers.log_disabled_integration("LAMatHome")
             return
 
-        if recipient == "terminate":
+        if action == "terminate":
             if config.config["lamathometerminate_isenabled"]:
                 lam_at_home.terminate()
             else:

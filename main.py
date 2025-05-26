@@ -2,16 +2,18 @@ import os
 import json
 import logging
 import coloredlogs
-from datetime import datetime, timezone
+import threading
 from integrations import lam_at_home
-from utils import config, get_env, rabbit_hole, splash_screen, ui, llm_parse, task_executor, journal
+from datetime import datetime, timezone
+from utils import config, get_env, rabbit_hole, splash_screen, new_ui, llm_parse, task_executor, journal
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
-
+stop_event = threading.Event()
+    
 def process_utterance(journal_entry, journal: journal.Journal, playwright_context):
     if isinstance(journal_entry, str):
         utterance = journal_entry
-    else: 
+    else:
         utterance = journal_entry['utterance']['prompt']
     logging.info(f"Prompt: {utterance}")
 
@@ -42,12 +44,8 @@ def process_utterance(journal_entry, journal: journal.Journal, playwright_contex
     except Exception as e:
         logging.error(f"An error occurred: {e}")
 
-
 def main():
     try:
-        # Check if env file exists, if not run ui.py to create it
-        if not os.path.exists(config.config["env_file"]):
-            ui.create_ui()
         print(splash_screen.colored_splash)
         logging.info("LAMatHome is starting...")
 
@@ -62,7 +60,7 @@ def main():
                 json.dump({}, f)
 
         # Initialize journal for storing rolling transcript
-        userJournal = journal.Journal(max_entries=config.config['rolling_transcript_size'])
+        user_journal = journal.Journal(max_entries=config.config['rolling_transcript_size'])
 
         with sync_playwright() as p:
             # Use firefox for full headless
@@ -77,29 +75,29 @@ def main():
                 assistant = profile.get('assistantName')
             
             if config.config["mode"] == "rabbit":
-                currentTimeIso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+                current_time_iso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
                 logging.info(f"Welcome {user}! LAMatHome is now listening for journal entries posted by {assistant}")
-                for journal_entry in rabbit_hole.journal_entries_generator(currentTimeIso):
-                    process_utterance(journal_entry, userJournal, context)
+                for journal_entry in rabbit_hole.journal_entries_generator(current_time_iso):
+                    if stop_event.is_set():
+                        break
+                    process_utterance(journal_entry, user_journal, context)
             
             elif config.config["mode"] == "cli":
                 logging.info("Entering interactive mode...")
-                while True:
+                while not stop_event.is_set():
                     user_input = input(f"{user}@LAMatHome> " if user else "LAMatHome> ")
-                    process_utterance(user_input, userJournal, context)
+                    process_utterance(user_input, user_journal, context)
 
             else:
                 logging.error("Invalid mode specified in config.json")
 
     except KeyboardInterrupt:
-        print("\n")
         logging.info("Program terminated by user")
     finally:
         lam_at_home.terminate()
 
-
 if __name__ == "__main__":
-    # configure logging and run LAMatHome
+    # Configure logging and run LAMatHome
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     coloredlogs.install(
         level='INFO', 
@@ -107,4 +105,5 @@ if __name__ == "__main__":
         datefmt='%Y-%m-%d %H:%M:%S', 
         field_styles={'asctime': {'color': 'white'}}
     )
-    main()
+    
+    new_ui.popup()

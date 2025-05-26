@@ -1,6 +1,7 @@
 from interpreter import interpreter
 import logging
-from utils import config, get_env
+from utils import config
+from utils.get_env import OI_API_KEY
 
 # set api base url based on config (valid options: groq, openai, or user set url)
 if config.config.get("openinterpreter_llm_api_base") in ["groq", "openai"]:
@@ -21,7 +22,7 @@ else:
 
 # set the rest of the OI values
 interpreter.auto_run = config.config.get("openinterpreter_auto_run_isenabled")
-interpreter.llm.api_key = config.config.get("openinterpreter_llm_api_key")
+interpreter.llm.api_key = OI_API_KEY
 interpreter.llm.model = config.config.get("openinterpreter_llm_model")
 interpreter.llm.temperature = config.config.get("openinterpreter_llm_temperature")
 

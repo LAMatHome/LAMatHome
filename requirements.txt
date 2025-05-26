@@ -5,3 +5,7 @@ tk
 requests
 groq
 open-interpreter
+customtkinter
+pillow
+xlib
+pyobjc
